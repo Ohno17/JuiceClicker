@@ -36,12 +36,12 @@ function display() {
     juicelabel.innerHTML = game.juice + "/" + game.capacity;
 
     upgradeCost.innerHTML = getUpgradeCost();
-    criticalCost.innerHTML = getCriticalCost();
+    criticalCost.innerHTML = getCriticalCost() == 1000 ? "MAX" : getCriticalCost();
     capacityCost.innerHTML = getCapacityCost();
     juicerCost.innerHTML = getJuicerCost();
 
     upgradeButton.disabled = game.juice < getUpgradeCost();
-    criticalButton.disabled = game.juice < getCriticalCost();
+    criticalButton.disabled = (game.juice < getCriticalCost()) || (getCriticalCost() == 1000);
     capacityButton.disabled = game.juice < getCapacityCost();
     juicerButton.disabled = game.juice < getJuicerCost();
 
