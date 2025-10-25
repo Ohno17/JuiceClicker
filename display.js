@@ -12,7 +12,7 @@ const criticalCost = document.getElementById("criticalCost");
 const capacityCost = document.getElementById("capacityCost");
 const juicerCost = document.getElementById("juicerCost");
 
-const shopMultButtons = document.getElementById("shopMultiplierSection");
+const shopMultiplierButtons = document.getElementById("shopMultiplierSection");
 
 const PARTICLE_TYPE = {
     JUICE: 0,
@@ -74,7 +74,7 @@ function createJuiceParticle(isCritical = false) {
         ty: 0,
         r: 0,
         color: isCritical ? "255, 255, 0" : "0, 0, 0",
-        critcal: true,
+        critcal: isCritical,
         t: PARTICLE_TYPE.NUMBER,
         text: "+" + (game.upgrade * (isCritical ? 2 : 1))
     });
@@ -130,8 +130,8 @@ function createSpendingParticle(targetRect, amount) {
 
 function doParticles() {
     const newParticles = [];
-    pCtx.lineWidth = 10;
-    pCtx.fillStyle = "blue";
+    pCtx.lineWidth = 3;
+    pCtx.strokeStye = "black";
     pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
     for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -171,6 +171,7 @@ function doParticles() {
             pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             pCtx.fill();
         } else {
+            pCtx.globalAlpha = 1 - p.r / 70;
             if (p.r > 70) continue;
 
             p.x += p.vx;
@@ -179,12 +180,17 @@ function doParticles() {
 
             p.vx *= 0.9;
             p.vy *= 0.9;
+            
+            if (p.critcal) {
+                pCtx.font = "bold " + (p.r * 1.5) + "px serif";
+            } else {
+                pCtx.font = p.r + "px Arial";
+            }
 
-            if (p.critcal) pCtx.strokeStyle = "black";
-            pCtx.fillStyle = "rgba(" + p.color + ", "   + (1 - p.r / 70) + ")";
-            pCtx.font = p.r + "px Arial";
+            pCtx.fillStyle = "rgb(" + p.color + ")";
             pCtx.fillText(p.text, p.x, p.y);
-            if (p.critcal) pCtx.strokeStyle = "rgba(0, 0, 0, 0)";
+            if (p.critcal) pCtx.strokeText(p.text, p.x, p.y);
+            pCtx.globalAlpha = 1;
         }
 
         newParticles.push(p);
@@ -219,8 +225,8 @@ function drawJuicers() {
 }
 
 function displayShopMultiplier(button) {
-    for (let i = 0; i < shopMultButtons.children.length; i++) {
-        shopMultButtons.children[i].className = "";
+    for (let i = 0; i < shopMultiplierButtons.children.length; i++) {
+        shopMultiplierButtons.children[i].className = "";
     }
     
     button.className = "selected";

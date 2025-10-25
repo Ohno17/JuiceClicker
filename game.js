@@ -29,7 +29,7 @@ function getUpgradeCost() {
 }
 
 function getCriticalCost() {
-    return Math.ceil(1000 * game.criticalChance);
+    return shopMultiplier * Math.ceil(1000 * game.criticalChance);
 }
 
 function getCapacityCost() {
@@ -65,7 +65,7 @@ function critical() {
     if (game.juice >= getCriticalCost()) {
         game.juice -= getCriticalCost();
         createSpendingParticleCritical(getCriticalCost());
-        game.criticalChance = (1 - game.criticalChance) * 0.07;
+        game.criticalChance += (1 - game.criticalChance) * 0.08;
     }
 }
 
