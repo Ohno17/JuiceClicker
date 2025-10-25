@@ -31,6 +31,11 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
+function pushParticle(part) {
+    if (particles.length > 15000) return;
+    particles.push(part);
+}
+
 function display() {
     juicebar.value = game.juice / game.capacity;
     juicelabel.innerHTML = game.juice + "/" + game.capacity;
@@ -54,7 +59,7 @@ function display() {
 function createJuiceParticle(isCritical = false) {
     const sourceRect = juicebutton.getBoundingClientRect();
     for (let i = 0; i < Math.min(game.upgrade, 50); i++) {
-        particles.push({
+        pushParticle({
             x: sourceRect.left + sourceRect.width / 2,
             y: sourceRect.top + sourceRect.height / 2,
             vx: (Math.random() - 0.5) * 10,
@@ -65,7 +70,7 @@ function createJuiceParticle(isCritical = false) {
             t: PARTICLE_TYPE.JUICE
         });
     }
-    particles.push({
+    pushParticle({
         x: sourceRect.left + sourceRect.width / 2,
         y: sourceRect.top + sourceRect.height / 2,
         vx: (Math.random() - 0.5) * 8,
@@ -102,7 +107,7 @@ function createSpendingParticleJuicer(amount) {
 
 function createSpendingParticle(targetRect, amount) {
     for (let i = 0; i < Math.min(amount, 100); i++) {
-        particles.push({
+        pushParticle({
             x: particleCanvas.width * Math.random(),
             y: -19,
             vx: Math.random() - 0.5,
@@ -114,7 +119,7 @@ function createSpendingParticle(targetRect, amount) {
             rand: Math.random() - 0.5
         });
     }
-    particles.push({
+    pushParticle({
         x: targetRect.left + targetRect.width / 2,
         y: targetRect.top + targetRect.height / 2,
         vx: (Math.random() + 0.5) * 20,
@@ -228,6 +233,5 @@ function displayShopMultiplier(button) {
     for (let i = 0; i < shopMultiplierButtons.children.length; i++) {
         shopMultiplierButtons.children[i].className = "";
     }
-    
     button.className = "selected";
 }
