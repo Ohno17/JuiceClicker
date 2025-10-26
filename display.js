@@ -20,6 +20,9 @@ const PARTICLE_TYPE = {
     NUMBER: 2
 };
 
+const particleImage = new Image();
+particleImage.src = "juice.png";
+
 let particles = [];
 const particleCanvas = document.getElementById("particle");
 const pCtx = particleCanvas.getContext("2d");
@@ -32,7 +35,7 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 function pushParticle(part) {
-    if (particles.length > 15000) return;
+    if (particles.length > 10000) return;
     particles.push(part);
 }
 
@@ -169,12 +172,18 @@ function doParticles() {
                 p.vy = Math.sin(finalAngle) * speed;
             }
 
-            if (p.t == PARTICLE_TYPE.JUICE) {p.r += 0.1; pCtx.fillStyle = "blue";}
-            else if (p.t == PARTICLE_TYPE.SPEND) {p.r = Math.min(distanceToTarget / 10, 19); pCtx.fillStyle = "red";}
+            if (p.t == PARTICLE_TYPE.JUICE) {
+                p.r += 0.1;
+                pCtx.drawImage(particleImage, p.x - p.r * 1.5, p.y - p.r * 1.5, p.r * 3, p.r * 3);
+            }
+            else if (p.t == PARTICLE_TYPE.SPEND) {
+                p.r = Math.min(distanceToTarget / 10, 19);
+                pCtx.fillStyle = "red";
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                pCtx.fill();
+            }
 
-            pCtx.beginPath();
-            pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            pCtx.fill();
         } else {
             pCtx.globalAlpha = 1 - p.r / 70;
             if (p.r > 70) continue;
@@ -217,8 +226,10 @@ function drawJuicers() {
 
         if (juicerCurrent == i && !juicebutton.disabled) {
             distance = Math.min(Math.abs(distance - (performance.now() - juicerSwitchTime) * 0.25 * game.juicers), distance);
-            if (distance < 40) juicebutton.className = "simactive";
-            else juicebutton.className = "";
+            if (game.juicers < 7) {
+                if (distance < 40) juicebutton.className = "simactive";
+                else juicebutton.className = "";
+            }
         }
 
         const x = Math.cos(currentAngle) * distance;
