@@ -1,4 +1,6 @@
 
+const saveInterval = setInterval(saveGame, 1000);
+
 function saveGame() {
     localStorage.setItem("game", JSON.stringify(game));
 }
@@ -13,6 +15,7 @@ function loadGame() {
 
 function resetSave() {
     localStorage.removeItem("game");
+    clearInterval(saveInterval);
     window.removeEventListener("beforeunload", saveGame)
 }
 
